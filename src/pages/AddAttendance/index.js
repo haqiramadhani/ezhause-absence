@@ -66,7 +66,10 @@ const AddAbsence = ({navigation, route}) => {
         [...params],
       );
       if (data.insertId) {
-        navigation.replace('Attendance Detail');
+        navigation.replace('Attendance Detail', {
+          department_id: department.id,
+          attendance_date: date,
+        });
       } else {
         ToastAndroid.show('Data employee is empty !', ToastAndroid.LONG);
       }
