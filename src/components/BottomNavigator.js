@@ -11,10 +11,10 @@ function BottomNavigator({state, descriptors, navigation}) {
   }
 
   const icons = {
-    Departments: 'university',
-    Attendances: 'clipboard-list',
+    Departemen: 'university',
+    Absensi: 'clipboard-list',
     Projects: 'receipt',
-    Other: 'ellipsis-h',
+    Lainya: 'ellipsis-h',
   };
 
   return (

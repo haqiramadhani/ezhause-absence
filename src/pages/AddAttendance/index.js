@@ -25,7 +25,7 @@ const AddAbsence = ({navigation, route}) => {
   const [date, setDate] = useState(new Date());
   const [departments, setDepartments] = useState([]);
   const [department, setDepartment] = useState({});
-  // const [employees, setEmployees] = useState([]);
+  const [title, setTitle] = useState('Tambah Absensi');
   const [selected, setSelected] = useState(null);
 
   const getEmployees = () => {
@@ -56,7 +56,12 @@ const AddAbsence = ({navigation, route}) => {
       params.push(1);
     });
     if (params.length) {
-      console.log('params', params);
+      const exist = await executeQuery(
+        'SELECT COUNT(*) AS exist FROM attendances WHERE attendance_date = ? AND department_id = ?',
+        [JSON.stringify(date), department.id],
+      );
+      if (exist.rows.raw()[0].exist)
+        return ToastAndroid.show('Absensi sudah dibuat !', ToastAndroid.LONG);
       const data = await executeQuery(
         // 'SELECT * FROM attendances',
         `INSERT INTO attendances (attendance_date, department_id, employee_id, attendance) VALUES ${employees.map(
@@ -68,22 +73,31 @@ const AddAbsence = ({navigation, route}) => {
       if (data.insertId) {
         navigation.replace('Attendance Detail', {
           department_id: department.id,
-          attendance_date: date,
+          attendance_date: JSON.stringify(date),
         });
       } else {
-        ToastAndroid.show('Data employee is empty !', ToastAndroid.LONG);
+        ToastAndroid.show('Data karyawan masih kosong !', ToastAndroid.LONG);
       }
     } else {
-      ToastAndroid.show('Data employee is empty !', ToastAndroid.LONG);
+      ToastAndroid.show('Data karyawan masih kosong !', ToastAndroid.LONG);
     }
   };
 
   useEffect(() => {
     getDepartments();
+    if (route.params.id) {
+      setTitle('Edit Absensi');
+      setDate(route.params.attendance_date);
+      setSelected(
+        departments.findIndex((i) => (i.id = route.params.department_id)),
+      );
+      setDepartment(
+        departments.find((i) => (i.id = route.params.department_id)),
+      );
+    }
   }, []);
 
   useEffect(() => {
-    console.log(department.id);
     getDepartments();
   }, [department]);
 
@@ -96,12 +110,12 @@ const AddAbsence = ({navigation, route}) => {
           </Button>
         </Left>
         <Body>
-          <Title>Add Attendance</Title>
+          <Title>{title}</Title>
         </Body>
         <Right />
       </Header>
       <View style={styles.container}>
-        <Label>Date</Label>
+        <Label>Tanggal</Label>
         <DatePicker
           defaultDate={date}
           maximumDate={date}
@@ -116,7 +130,7 @@ const AddAbsence = ({navigation, route}) => {
           onDateChange={setDate}
           disabled={false}
         />
-        <Label>Departments</Label>
+        <Label>Departemen</Label>
         <ScrollView style={{marginTop: 10, marginBottom: 140}}>
           {departments?.length
             ? departments.map((item, index) => (

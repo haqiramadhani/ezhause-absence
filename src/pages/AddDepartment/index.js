@@ -1,4 +1,4 @@
-import React, {createRef, useState} from 'react';
+import React, {createRef, useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {Colors} from '../../utils';
 import {Icon, Input} from 'react-native-elements';
@@ -8,16 +8,17 @@ import {Body, Button, Header, Left, Right, Title} from 'native-base';
 const AddClass = ({navigation, route}) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [title, setTitle] = useState('Tambah Departemen');
 
   const inputRefs = [
     {
-      field: 'Department Name',
+      field: 'Nama Departemen',
       ref: createRef(),
       value: name,
       setter: (value) => setName(value),
     },
     {
-      field: 'Description',
+      field: 'Deskripsi',
       ref: createRef(),
       value: description,
       setter: (value) => setDescription(value),
@@ -31,16 +32,36 @@ const AddClass = ({navigation, route}) => {
   };
 
   const createClass = async () => {
-    const data = await executeQuery(
-      'INSERT INTO departments (name, description) VALUES (?, ?)',
-      [name, description],
-    );
-    if (data.insertId) {
-      navigation.setParams({update: true});
-      navigation.setOptions({update: true});
-      navigation.pop();
+    if (!route.params?.id) {
+      const data = await executeQuery(
+        'INSERT INTO departments (name, description) VALUES (?, ?)',
+        [name, description],
+      );
+      if (data.insertId) {
+        navigation.setParams({update: true});
+        navigation.setOptions({update: true});
+        navigation.pop();
+      }
+    } else {
+      const data = await executeQuery(
+        'UPDATE departments SET name = ?, description = ? WHERE id = ?',
+        [name, description, route.params.id],
+      );
+      if (data.insertId) {
+        navigation.setParams({update: true});
+        navigation.setOptions({update: true});
+        navigation.pop();
+      }
     }
   };
+
+  useEffect(() => {
+    if (route.params?.id) {
+      setTitle('Edit Departemen');
+      setName(route.params.name);
+      setDescription(route.params.description);
+    }
+  }, []);
 
   return (
     <View style={styles.page}>
@@ -51,7 +72,7 @@ const AddClass = ({navigation, route}) => {
           </Button>
         </Left>
         <Body>
-          <Title>Add Department</Title>
+          <Title>{title}</Title>
         </Body>
         <Right />
       </Header>

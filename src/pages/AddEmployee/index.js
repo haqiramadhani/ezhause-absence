@@ -1,4 +1,4 @@
-import React, {createRef, useState} from 'react';
+import React, {createRef, useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableOpacity, ToastAndroid} from 'react-native';
 import {Colors} from '../../utils';
 import {Icon, Input} from 'react-native-elements';
@@ -19,10 +19,11 @@ const AddClass = ({navigation, route}) => {
   const [name, setName] = useState('');
   const [nik, setNik] = useState('');
   const [gender, setGender] = useState(1);
+  const [title, setTitle] = useState('Tambah Karyawan');
 
   const inputRefs = [
     {
-      field: 'Full Name',
+      field: 'Nama Lengkap',
       ref: createRef(),
       value: name,
       setter: (value) => setName(value),
@@ -43,11 +44,19 @@ const AddClass = ({navigation, route}) => {
   };
 
   const createEmployee = async () => {
-    if (name && nik && gender && route.params.id) {
-      const data = await executeQuery(
-        'INSERT INTO employees (name, nik, gender, department_id) VALUES (?, ?, ?, ?)',
-        [name, nik, gender, route.params.id],
-      );
+    let data;
+    if (name && nik && gender) {
+      if (!route.params.id) {
+        data = await executeQuery(
+          'INSERT INTO employees (name, nik, gender, department_id) VALUES (?, ?, ?, ?)',
+          [name, nik, gender, route.params.department_id],
+        );
+      } else {
+        data = await executeQuery(
+          'UPDATE employees SET name = ?, nik = ?, gender = ? WHERE id = ?',
+          [name, nik, gender, route.params.id],
+        );
+      }
       if (data.insertId) {
         navigation.goBack();
       }
@@ -55,6 +64,16 @@ const AddClass = ({navigation, route}) => {
       ToastAndroid.show('full name & NIK is required !', ToastAndroid.LONG);
     }
   };
+
+  useEffect(() => {
+    console.log(route.params);
+    if (route.params.id) {
+      setTitle('Edit Karyawan');
+      setName(route.params.name);
+      setNik(route.params.nik);
+      setGender(route.params.gender);
+    }
+  }, []);
 
   return (
     <View style={styles.page}>
@@ -65,7 +84,7 @@ const AddClass = ({navigation, route}) => {
           </Button>
         </Left>
         <Body>
-          <Title>Add Employee</Title>
+          <Title>{title}</Title>
           <Title style={styles.miniTitle}>
             {route.params.name} - {route.params.description}
           </Title>
@@ -88,15 +107,15 @@ const AddClass = ({navigation, route}) => {
           />
         ))}
         <Form>
-          <Label style={styles.formLabel}>{'  '}Gender</Label>
+          <Label style={styles.formLabel}>{'  '}Jenis Kelamin</Label>
           <Picker
             note
             mode="dropdown"
             style={styles.picker}
             selectedValue={gender}
             onValueChange={(v) => setGender(v)}>
-            <Picker.Item label="  Male" value="1" />
-            <Picker.Item label="  Female" value="0" />
+            <Picker.Item label="  Laki-laki" value="1" />
+            <Picker.Item label="  Perempuan" value="0" />
           </Picker>
         </Form>
       </View>

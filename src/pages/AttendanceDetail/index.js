@@ -31,7 +31,10 @@ const AttendanceDetail = ({navigation, route}) => {
 
   const updater = (attendance, id) => {
     console.log(attendance, id);
-    executeQuery('UPDATE attendances SET attendance = ? WHERE id = ?', [attendance, id])
+    executeQuery('UPDATE attendances SET attendance = ? WHERE id = ?', [
+      attendance,
+      id,
+    ])
       .then((r) => setData(r.rows.raw()))
       .catch((e) => console.log(e));
     setFetch(fetch + 1);
@@ -46,7 +49,7 @@ const AttendanceDetail = ({navigation, route}) => {
           </Button>
         </Left>
         <Body>
-          <Title>Attendance Detail</Title>
+          <Title>Absensi</Title>
         </Body>
         <Right />
       </Header>
@@ -63,21 +66,13 @@ const AttendanceDetail = ({navigation, route}) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             paddingBottom: 5,
-            // width: 150,
+            width: 170,
+            marginRight: 10,
           }}>
-          <Label style={{fontSize: 13, color: Colors.textLight}}>
-            {' '}
-            present{' '}
-          </Label>
-          <Label style={{fontSize: 13, color: Colors.textLight}}>
-            {' '}
-            absence{' '}
-          </Label>
-          <Label style={{fontSize: 13, color: Colors.textLight}}> sick </Label>
-          <Label style={{fontSize: 13, color: Colors.textLight}}>
-            {' '}
-            permit{' '}
-          </Label>
+          <Label style={{fontSize: 13, color: Colors.textLight}}> hadir </Label>
+          <Label style={{fontSize: 13, color: Colors.textLight}}> absen </Label>
+          <Label style={{fontSize: 13, color: Colors.textLight}}> sakit </Label>
+          <Label style={{fontSize: 13, color: Colors.textLight}}> izin </Label>
         </View>
       </View>
       <View>
@@ -92,10 +87,22 @@ const AttendanceDetail = ({navigation, route}) => {
                       justifyContent: 'space-between',
                       width: 150,
                     }}>
-                    <Radio selected={item.attendance === 1} onPress={() => updater(1, item.id)} />
-                    <Radio selected={item.attendance === 2} onPress={() => updater(2, item.id)} />
-                    <Radio selected={item.attendance === 3} onPress={() => updater(3, item.id)} />
-                    <Radio selected={item.attendance === 4} onPress={() => updater(4, item.id)} />
+                    <Radio
+                      selected={item.attendance === 1}
+                      onPress={() => updater(1, item.id)}
+                    />
+                    <Radio
+                      selected={item.attendance === 2}
+                      onPress={() => updater(2, item.id)}
+                    />
+                    <Radio
+                      selected={item.attendance === 3}
+                      onPress={() => updater(3, item.id)}
+                    />
+                    <Radio
+                      selected={item.attendance === 4}
+                      onPress={() => updater(4, item.id)}
+                    />
                   </View>
                 }
               />

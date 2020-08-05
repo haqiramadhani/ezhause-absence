@@ -11,7 +11,7 @@ const Splash = ({navigation}) => {
 
   return (
     <View style={styles.page}>
-      <Text style={styles.title}>Employee Attendance</Text>
+      <Text style={styles.title}>Absensi Karyawan</Text>
     </View>
   );
 };

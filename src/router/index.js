@@ -24,10 +24,10 @@ const Tab = createBottomTabNavigator();
 const MainApp = () => {
   return (
     <Tab.Navigator backBehavior="initialRoute" tabBar={BottomNavigator}>
-      <Tab.Screen name="Departments" component={Departments} />
-      <Tab.Screen name="Attendances" component={Attendances} />
+      <Tab.Screen name="Departemen" component={Departments} />
+      <Tab.Screen name="Absensi" component={Attendances} />
       {/*<Tab.Screen name="Projects" component={Projects} />*/}
-      <Tab.Screen name="Other" component={Other} />
+      <Tab.Screen name="Lainya" component={Other} />
     </Tab.Navigator>
   );
 };

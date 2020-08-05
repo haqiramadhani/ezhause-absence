@@ -18,10 +18,10 @@ const Class = ({navigation, route}) => {
   }, [navigation]);
 
   const promptDeleteItem = (item) => {
-    Alert.alert('Delete', 'Are you sure want to delete this department?', [
-      {text: 'No', style: 'cancel'},
+    Alert.alert('Delete', 'Apakah Anda yakin ingin menghapus departemen ini?', [
+      {text: 'Tidak', style: 'cancel'},
       {
-        text: 'Yes',
+        text: 'Iya',
         style: 'default',
         onPress: () => {
           executeQuery('DELETE FROM departments WHERE id = ?', [item.id]);
@@ -39,7 +39,7 @@ const Class = ({navigation, route}) => {
     <View style={styles.page}>
       <Header style={styles.defaultColor}>
         <Body>
-          <Title> Departments </Title>
+          <Title> Departemen </Title>
         </Body>
       </Header>
       {/*<ScrollView>*/}
@@ -73,7 +73,7 @@ const Class = ({navigation, route}) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                  <Label style={{color: Colors.textLight}}>Delete</Label>
+                  <Label style={{color: Colors.textLight}}>Hapus</Label>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => editItem(item)}
@@ -96,8 +96,8 @@ const Class = ({navigation, route}) => {
         // data.map((item, index) => ())
         <View style={{justifyContent: 'center', height: 300}}>
           <Icon name="folder-open" type="font-awesome-5" size={80} />
-          <Text style={styles.text}>No Departments.</Text>
-          <Text style={styles.text}>Press + to add department</Text>
+          <Text style={styles.text}>Tidak ada departemen.</Text>
+          <Text style={styles.text}>Ketuk + untuk menambah</Text>
         </View>
       )}
       {/*</ScrollView>*/}
